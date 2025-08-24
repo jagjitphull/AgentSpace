@@ -1,0 +1,6 @@
+{"id": "doc-1", "content": {"uri": "gs://
+agentspace-demo-data-20250824/HR_Policy_Remote_Work.pdf"}, "structData": {"department": "HR", "doc_type": "policy", "effective_date": "2025-08-01"}}
+{"id": "doc-2", "content": {"uri": "gs://
+agentspace-demo-data-20250824/Project_Contract_TelecomAI.pdf"}, "structData": {"department": "Engineering", "doc_type": "contract", "start_date": "2025-09-01"}}
+{"id": "doc-3", "content": {"uri": "gs://
+agentspace-demo-data-20250824/Compliance_Audit_2025.pdf"}, "structData": {"department": "Compliance", "doc_type": "audit", "year": "2025"}}

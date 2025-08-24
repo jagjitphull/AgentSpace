@@ -1,0 +1,105 @@
+  
+  sudo apt update && sudo apt upgrade -y
+  
+  sudo apt install apt-transport-https curl gnupg -y
+  
+  sudo curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor -o /usr/share/keyrings/bazel.gpg
+  
+  sudo apt install apt-transport-https curl gnupg -y
+  
+  curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor >bazel-archive-keyring.gpg
+  
+  sudo mv bazel-archive-keyring.gpg /usr/share/keyrings
+  
+  echo "deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
+  
+  sudo apt update && sudo apt install bazel
+
+
+  ############################## CONAN #######################
+
+  conan-learn/
+├── CMakeLists.txt
+├── conanfile.txt
+├── main.cpp
+└── build/
+    ├── conan_toolchain.cmake
+    ├── fmt-config.cmake
+    └── ...
+
+
+main.cpp
+
+#include <fmt/core.h>
+#include <iostream>
+
+int main() {
+    std::string msg = fmt::format("Hello, {}!", "Conan");
+    std::cout << msg << std::endl;
+    return 0;
+}
+
+
+conanfile.txt
+
+[requires]
+fmt/10.1.1
+
+[generators]
+CMakeToolchain
+CMakeDeps
+
+
+CMakeLists.txt
+
+cmake_minimum_required(VERSION 3.15)
+project(conan_fmt_demo)
+
+find_package(fmt REQUIRED)
+
+add_executable(demo main.cpp)
+target_link_libraries(demo PRIVATE fmt::fmt)
+
+
+
+
+# 1. In project root (where conanfile.txt, main.cpp, CMakeLists.txt are present)
+conan install . --output-folder=build --build=missing
+
+# 2. Enter the build directory
+cd build
+
+# 3. Run cmake using the toolchain and specify build type
+cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+
+# 4. Build
+cmake --build .
+
+# 5. Run the app
+./demo
+
+
+TO BE TESTED AND UPLOADED TO GITHUB for BAZEL 
+
+FOR C++
+unzip bazel-cpp-starter.zip
+cd bazel-cpp-starter
+bazel build //...
+bazel run //apps/hello_cc
+bazel test //tests:hello_cc_test
+# Reproducibility demo:
+bazel build //examples/reproducibility:nonhermetic_time
+sleep 2 && bazel build //examples/reproducibility:nonhermetic_time
+bazel build //examples/reproducibility:hermetic_fixed
+
+
+FOR PYTHON
+unzip bazel-python-starter.zip
+cd bazel-python-starter
+bazel build //...
+bazel run //apps/hello_py
+bazel test //tests:hello_py_test
+# Reproducibility demo:
+bazel build //examples/reproducibility:nonhermetic_time
+sleep 2 && bazel build //examples/reproducibility:nonhermetic_time
+bazel build //examples/reproducibility:hermetic_fixed
